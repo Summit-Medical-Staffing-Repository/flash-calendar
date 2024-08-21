@@ -1,3 +1,4 @@
+
 import { useMemo } from "react";
 
 import type { DayState } from "@/components/CalendarItemDay";
@@ -30,6 +31,8 @@ const getNumberOfEmptyCellsAtStart = (
 interface CalendarDayStateFields {
   /** Is this day disabled? */
   isDisabled: boolean;
+  /** Is this day assigned? */
+  isAssigned: boolean;
   /** Is this the current day? */
   isToday: boolean;
   /** Is this the start of a range? */
@@ -132,6 +135,11 @@ export interface UseCalendarParams {
    * unless they are part of an active range.
    */
   calendarDisabledDateIds?: string[];
+  /**
+   * The Assigned date IDs. Dates in this list will be in the `assigned` state
+   * unless they are part of an active range.
+   */
+  calendarAssignedDateIds?: string[];
 }
 
 type GetStateFields = Pick<
@@ -140,6 +148,7 @@ type GetStateFields = Pick<
   | "calendarMinDateId"
   | "calendarMaxDateId"
   | "calendarDisabledDateIds"
+  | "calendarAssignedDateIds"
 > & {
   todayId?: string;
   id: string;
@@ -155,6 +164,7 @@ export const getStateFields = ({
   calendarMinDateId,
   calendarMaxDateId,
   calendarDisabledDateIds,
+  calendarAssignedDateIds,
 }: GetStateFields): CalendarDayStateFields => {
   const activeRange = calendarActiveDateRanges?.find(({ startId, endId }) => {
     // Regular range
@@ -170,6 +180,11 @@ export const getStateFields = ({
 
   const isRangeValid =
     activeRange?.startId !== undefined && activeRange.endId !== undefined;
+  
+  const isAssigned =
+    (calendarAssignedDateIds?.includes(id) ||
+      (calendarMinDateId && id < calendarMinDateId) ||
+      (calendarMaxDateId && id > calendarMaxDateId)) === true;
 
   const isDisabled =
     (calendarDisabledDateIds?.includes(id) ||
@@ -182,6 +197,8 @@ export const getStateFields = ({
     ? ("active" as const)
     : isDisabled
     ? "disabled"
+    : isAssigned
+    ? "assigned"  
     : isToday
     ? "today"
     : "idle";
@@ -191,6 +208,7 @@ export const getStateFields = ({
     isEndOfRange: id === activeRange?.endId,
     isRangeValid,
     state,
+    isAssigned,
     isDisabled,
     isToday,
   };

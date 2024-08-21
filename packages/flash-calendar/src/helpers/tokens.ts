@@ -1,3 +1,4 @@
+
 const baseTokens = {
   spacing: {
     0: 0,
@@ -21,6 +22,7 @@ export const lightTheme = {
   colors: {
     content: {
       disabled: "#B0B0B0",
+      assigned: "#038a03",
       primary: "#000000",
       secondary: "#212121",
       inverse: {
@@ -47,6 +49,7 @@ export const darkTheme = {
   colors: {
     content: {
       disabled: "#bdbdbd",
+      assigned: "#54c754",
       primary: "#FFFFFF",
       secondary: "#e8e8e8",
       inverse: {

@@ -1,3 +1,4 @@
+
 import type { ReactNode } from "react";
 import { useCallback, useMemo } from "react";
 import type { TextStyle, ViewStyle } from "react-native";
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export type DayState = "idle" | "active" | "today" | "disabled";
+export type DayState = "idle" | "active" | "today" | "disabled" | "assigned";
 
 interface DayTheme {
   container: Omit<ViewStyle, "borderRadius">;
@@ -80,6 +81,13 @@ const buildBaseStyles = (theme: BaseTheme): CalendarItemDayTheme => {
       }
       return baseStyles;
     },
+    assigned: () => ({
+      container: styles.baseContainer,
+      content: {
+        ...baseContent,
+        color: theme.colors.content.assigned,
+      },
+    }),
     disabled: () => ({
       container: styles.baseContainer,
       content: {
